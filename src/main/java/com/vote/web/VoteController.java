@@ -3,6 +3,7 @@ package com.vote.web;
 import com.vote.domain.BaseVote;
 import com.vote.domain.BaseVoteMapper;
 import com.vote.result.SisapResult;
+import com.vote.util.ImgUtil;
 import com.vote.util.MapUtil;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
@@ -65,7 +66,7 @@ public class VoteController {
             //添加图片
             if(null != img_file && StringUtils.isNotBlank(img_file.getOriginalFilename())) {
                 //转为图片路径
-                String img_path = handleFileUpload(img_file, 100l);
+                String img_path = ImgUtil.handleFileUpload(img_file, 100l);
                 baseVote.setImg_url(img_path);
             }
 
@@ -96,7 +97,7 @@ public class VoteController {
             //修改图片
             if(null != img_file && StringUtils.isNotBlank(img_file.getOriginalFilename())) {
                 //转为图片路径
-                String img_path = handleFileUpload(img_file, baseVote.getVote_id());
+                String img_path = ImgUtil.handleFileUpload(img_file, baseVote.getVote_id());
                 baseVote.setImg_url(img_path);
             }
 
@@ -168,40 +169,4 @@ public class VoteController {
         return sisapResult;
     }
 
-    public String handleFileUpload(MultipartFile mfile, Long vote_id) throws Exception {
-
-        if (!mfile.isEmpty()) {
-            String filename = mfile.getOriginalFilename();
-            String file_extname = filename.substring(filename.lastIndexOf("."), filename.length());
-            filename = vote_id + "_" +  new Date().getTime();
-            String path = getRuntimeConfigPath() + File.separator + filename + file_extname;
-            try {
-                mfile.transferTo(new File(path));
-                path =  "http://139.129.47.102/" + filename + file_extname;        //转为http地址
-                return path;
-            } catch (IllegalStateException | IOException e) {
-                logger.error(e.getMessage());
-                throw new Exception(e);
-            }
-        }
-        return null;
-    }
-
-    /**
-     * 获取系统运行期配置文件路径
-     * @return
-     */
-    public static String getRuntimeConfigPath() {
-        String path = System.getenv().get("RUNTIME_CONFIG_ROOT");
-        if (StringUtils.isBlank(path)) {
-            String os = System.getProperty("os.name").toLowerCase();
-            if (os.indexOf("win") >= 0) {
-                path = "E:"+File.separator+"votefile";
-            }
-            else {
-                path = "/usr/cgw/votefile";
-            }
-        }
-        return path;
-    }
 }
