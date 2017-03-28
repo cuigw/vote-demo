@@ -28,7 +28,7 @@ public class ImgUtil {
             String path = getRuntimeConfigPath() + File.separator + filename + file_extname;
             try {
                 mfile.transferTo(new File(path));
-                path =  "http://139.129.47.102/" + filename + file_extname;        //转为http地址
+                path =  "http://139.129.47.102/hyhimg/" + filename + file_extname;        //转为http地址
                 return path;
             } catch (IllegalStateException | IOException e) {
                 throw new Exception(e);
@@ -46,10 +46,10 @@ public class ImgUtil {
         if (StringUtils.isBlank(path)) {
             String os = System.getProperty("os.name").toLowerCase();
             if (os.indexOf("win") >= 0) {
-                path = "E:"+File.separator+"votefile";
+                path = "E:"+File.separator+"votefile"+File.separator+"hyhimg";
             }
             else {
-                path = "/usr/cgw/votefile";
+                path = "/usr/cgw/votefile/hyhimg";
             }
         }
         return path;
